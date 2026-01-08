@@ -7,8 +7,8 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CategoryDTO {
+public class UpdateCartItemDTO {
 
-    private String name;
-    private String description;
+    private Long cartItemId;
+    private Integer quantity;
 }
