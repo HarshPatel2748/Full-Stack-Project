@@ -1,6 +1,7 @@
 package com.marketplace.marketplace_backend.controller;
 
 import com.marketplace.marketplace_backend.dto.ProductRequestDTO;
+import com.marketplace.marketplace_backend.dto.ProductResponseDTO;
 import com.marketplace.marketplace_backend.entity.Product;
 import com.marketplace.marketplace_backend.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -57,9 +58,18 @@ public class ProductController {
 
     // ====================== Public APIs ======================
 
-    //View All Products
+    // Get all products
     @GetMapping
-    public ResponseEntity<List<Product>> getAllProducts() {
+    public ResponseEntity<List<ProductResponseDTO>> getAllProducts() {
         return ResponseEntity.ok(productService.getAllProducts());
     }
+
+    // Search products by keyword
+    @GetMapping("/search")
+    public ResponseEntity<List<ProductResponseDTO>> searchProducts(
+            @RequestParam("q") String keyword) {
+        List<ProductResponseDTO> products = productService.searchProducts(keyword);
+        return ResponseEntity.ok(products);
+    }
+
 }

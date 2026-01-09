@@ -1,6 +1,7 @@
 package com.marketplace.marketplace_backend.service.impl;
 
 import com.marketplace.marketplace_backend.dto.ProductRequestDTO;
+import com.marketplace.marketplace_backend.dto.ProductResponseDTO;
 import com.marketplace.marketplace_backend.entity.Category;
 import com.marketplace.marketplace_backend.entity.Product;
 import com.marketplace.marketplace_backend.entity.Seller;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -98,9 +100,48 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findBySeller(seller);
     }
 
-    //Get All Products
     @Override
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
+    public List<ProductResponseDTO> getAllProducts() {
+        return productRepository.findAll()
+                .stream()
+                .map(this::mapToDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ProductResponseDTO> searchProducts(String keyword) {
+        // Search in name or description (you can expand to category or seller if needed)
+        List<Product> products = productRepository.findByNameContainingIgnoreCaseOrDescriptionContainingIgnoreCase(keyword, keyword);
+
+        // Map each Product to ProductResponseDTO
+        return products.stream()
+                .map(product -> ProductResponseDTO.builder()
+                        .id(product.getId())
+                        .name(product.getName())
+                        .description(product.getDescription())
+                        .price(product.getPrice())
+                        .stock(product.getStock())
+                        .imageUrl(product.getImageUrl())
+                        .sellerId(product.getSeller().getId())
+                        .sellerShopName(product.getSeller().getShopName())
+                        .categoryId(product.getCategory().getId())
+                        .categoryName(product.getCategory().getName())
+                        .build())
+                .toList();
+    }
+
+    private ProductResponseDTO mapToDTO(Product product) {
+        return ProductResponseDTO.builder()
+                .id(product.getId())
+                .name(product.getName())
+                .description(product.getDescription())
+                .price(product.getPrice())
+                .stock(product.getStock())
+                .imageUrl(product.getImageUrl())
+                .sellerId(product.getSeller().getId())
+                .sellerShopName(product.getSeller().getShopName())
+                .categoryId(product.getCategory().getId())
+                .categoryName(product.getCategory().getName())
+                .build();
     }
 }

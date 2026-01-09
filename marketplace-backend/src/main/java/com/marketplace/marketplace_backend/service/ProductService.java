@@ -1,6 +1,7 @@
 package com.marketplace.marketplace_backend.service;
 
 import com.marketplace.marketplace_backend.dto.ProductRequestDTO;
+import com.marketplace.marketplace_backend.dto.ProductResponseDTO;
 import com.marketplace.marketplace_backend.entity.Product;
 
 import java.util.List;
@@ -15,5 +16,7 @@ public interface ProductService {
 
     List<Product> getSellerProducts(Long sellerId);
 
-    List<Product> getAllProducts();
+    List<ProductResponseDTO> getAllProducts();
+
+    List<ProductResponseDTO> searchProducts(String keyword);
 }
