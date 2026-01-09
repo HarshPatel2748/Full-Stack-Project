@@ -10,6 +10,6 @@ import lombok.*;
 public class AdminLoginResponseDTO {
 
     private Long adminId;
-    private String role;
-    private String message;
+    private String name;
+    private String email;
 }

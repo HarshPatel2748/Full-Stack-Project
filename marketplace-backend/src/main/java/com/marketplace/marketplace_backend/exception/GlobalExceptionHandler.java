@@ -14,24 +14,23 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-
-    // Handle All Runtime Exceptions
+    // Handle all Runtime Exceptions
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<ErrorResponseDTO> handleRuntimeException(RuntimeException ex){
+    public ResponseEntity<ErrorResponseDTO> handleRuntimeException(RuntimeException ex) {
 
-        ErrorResponseDTO error =  new ErrorResponseDTO(
+        ErrorResponseDTO error = new ErrorResponseDTO(
                 HttpStatus.BAD_REQUEST.value(),
                 ex.getMessage(),
                 LocalDateTime.now()
         );
+
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
-
-    // Handle Validation Errors
+    // Handle validation errors
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponseDTO> handleValidationErrors(
-            MethodArgumentNotValidException ex){
+            MethodArgumentNotValidException ex) {
 
         String message = ex.getBindingResult()
                 .getFieldError()
@@ -42,27 +41,20 @@ public class GlobalExceptionHandler {
                 message,
                 LocalDateTime.now()
         );
+
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
-
-    //Handle Everything Else
+    // Handle everything else
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponseDTO> handleGenericException(Exception ex){
+    public ResponseEntity<ErrorResponseDTO> handleGenericException(Exception ex) {
 
         ErrorResponseDTO error = new ErrorResponseDTO(
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                ex.getMessage(),
+                "Something went wrong",
                 LocalDateTime.now()
         );
+
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
-
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<Map<String, String>> handleRuntime(RuntimeException ex) {
-        Map<String, String> error = new HashMap<>();
-        error.put("message", ex.getMessage());
-        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 }

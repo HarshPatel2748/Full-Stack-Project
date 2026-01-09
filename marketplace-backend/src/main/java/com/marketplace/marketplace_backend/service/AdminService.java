@@ -8,8 +8,6 @@ import java.util.List;
 
 public interface AdminService {
 
-    AdminLoginResponseDTO login(AdminLoginRequestDTO dto);
-
     List<Seller> getPendingSellers();
 
     Seller approveSeller(Long adminId, Long sellerId);

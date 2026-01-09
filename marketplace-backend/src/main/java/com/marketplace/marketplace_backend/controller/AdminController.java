@@ -17,14 +17,6 @@ public class AdminController {
 
     private final AdminServiceImpl adminService;
 
-    //Admin Login
-    @PostMapping("/login")
-    public ResponseEntity<AdminLoginResponseDTO> login(
-            @RequestBody AdminLoginRequestDTO dto){
-
-        return ResponseEntity.ok(adminService.login(dto));
-    }
-
     //List pending sellers
     @GetMapping("/sellers/pending")
     public ResponseEntity<List<Seller>> getPendingSellers(){

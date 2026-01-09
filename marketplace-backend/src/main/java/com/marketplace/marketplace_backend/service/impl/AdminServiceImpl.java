@@ -22,25 +22,6 @@ public class AdminServiceImpl implements AdminService {
 
     private final AdminRepository adminRepository;
 
-
-    //Admin Login
-    @Override
-    public AdminLoginResponseDTO login(AdminLoginRequestDTO dto) {
-
-        Admin admin = adminRepository.findByEmail(dto.getEmail())
-                .orElseThrow(() -> new RuntimeException("Invalid email or password"));
-
-        if(!admin.getPassword().equals(dto.getPassword())){
-            throw new RuntimeException("Invalid email or password");
-        }
-
-        return AdminLoginResponseDTO.builder()
-                .adminId(admin.getId())
-                .role("ADMIN")
-                .message("Login successful")
-                .build();
-    }
-
     //Get all pending sellers
     public List<Seller> getPendingSellers(){
         return sellerRepository.findByStatus(SellerStatus.PENDING);
