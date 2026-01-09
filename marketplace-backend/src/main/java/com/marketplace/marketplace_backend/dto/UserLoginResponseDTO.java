@@ -9,7 +9,8 @@ import lombok.*;
 @Builder
 public class UserLoginResponseDTO {
 
-    private Long userId;
-    private String role;
-    private String message;
+    private Long id;
+    private String firstName;
+    private String lastName;
+    private String email;
 }

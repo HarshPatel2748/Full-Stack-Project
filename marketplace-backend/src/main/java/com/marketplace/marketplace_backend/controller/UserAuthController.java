@@ -4,9 +4,8 @@ import com.marketplace.marketplace_backend.dto.UserLoginRequestDTO;
 import com.marketplace.marketplace_backend.dto.UserLoginResponseDTO;
 import com.marketplace.marketplace_backend.dto.UserSignupRequestDTO;
 import com.marketplace.marketplace_backend.dto.UserSignupResponseDTO;
-import com.marketplace.marketplace_backend.service.UserService;
+import com.marketplace.marketplace_backend.service.UserAuthService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,27 +13,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/auth/user")
 @RequiredArgsConstructor
-public class UserController {
+public class UserAuthController {
 
-    private final UserService userService;
+    private final UserAuthService userAuthService;
 
 
-    // User signup
     @PostMapping("/signup")
     public ResponseEntity<UserSignupResponseDTO> signup(
-            @RequestBody UserSignupRequestDTO dto){
-
-        UserSignupResponseDTO response = userService.signup(dto);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+            @RequestBody UserSignupRequestDTO dto) {
+        return ResponseEntity.ok(userAuthService.signup(dto));
     }
 
-    // User Login
+
     @PostMapping("/login")
     public ResponseEntity<UserLoginResponseDTO> login(
-            @RequestBody UserLoginRequestDTO dto){
-        UserLoginResponseDTO response = userService.login(dto);
-        return ResponseEntity.ok(response);
+            @RequestBody UserLoginRequestDTO dto) {
+        return ResponseEntity.ok(userAuthService.login(dto));
     }
 }

@@ -5,7 +5,7 @@ import com.marketplace.marketplace_backend.dto.UserLoginResponseDTO;
 import com.marketplace.marketplace_backend.dto.UserSignupRequestDTO;
 import com.marketplace.marketplace_backend.dto.UserSignupResponseDTO;
 
-public interface UserService {
+public interface UserAuthService {
 
     UserSignupResponseDTO signup(UserSignupRequestDTO dto);
 

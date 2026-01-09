@@ -6,37 +6,42 @@ import com.marketplace.marketplace_backend.dto.UserSignupRequestDTO;
 import com.marketplace.marketplace_backend.dto.UserSignupResponseDTO;
 import com.marketplace.marketplace_backend.entity.User;
 import com.marketplace.marketplace_backend.repository.UserRepository;
-import com.marketplace.marketplace_backend.service.UserService;
+import com.marketplace.marketplace_backend.service.UserAuthService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService {
+public class UserAuthServiceImpl implements UserAuthService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+
 
     @Override
     public UserSignupResponseDTO signup(UserSignupRequestDTO dto) {
 
-        if(userRepository.existsByEmail(dto.getEmail())){
-            throw new RuntimeException("Email already exists");
+        if (userRepository.findByEmail(dto.getEmail()).isPresent()) {
+            throw new RuntimeException("Email already registered");
         }
 
         User user = User.builder()
                 .firstName(dto.getFirstName())
                 .lastName(dto.getLastName())
                 .email(dto.getEmail())
-                .password(dto.getPassword())
+                .password(passwordEncoder.encode(dto.getPassword()))
                 .phone(dto.getPhone())
                 .address(dto.getAddress())
                 .build();
 
-        User savedUser = userRepository.save(user);
+        user = userRepository.save(user);
 
         return UserSignupResponseDTO.builder()
-                .userId(savedUser.getId())
-                .message("User registered successfully")
+                .id(user.getId())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .email(user.getEmail())
                 .build();
     }
 
@@ -47,14 +52,15 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByEmail(dto.getEmail())
                 .orElseThrow(() -> new RuntimeException("Invalid email or password"));
 
-        if (!user.getPassword().equals(dto.getPassword())) {
+        if (!passwordEncoder.matches(dto.getPassword(), user.getPassword())) {
             throw new RuntimeException("Invalid email or password");
         }
 
         return UserLoginResponseDTO.builder()
-                .userId(user.getId())
-                .role("USER")
-                .message("Login successful")
+                .id(user.getId())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .email(user.getEmail())
                 .build();
     }
 }
