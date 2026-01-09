@@ -9,7 +9,8 @@ import lombok.*;
 @Builder
 public class SellerSignupResponseDTO {
 
-    private Long selerId;
+    private Long sellerId;
+    private String shopName;
+    private String email;
     private String status;
-    private String message;
 }

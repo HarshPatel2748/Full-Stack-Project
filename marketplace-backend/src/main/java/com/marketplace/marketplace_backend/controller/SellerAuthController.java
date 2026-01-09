@@ -4,9 +4,8 @@ import com.marketplace.marketplace_backend.dto.SellerLoginRequestDTO;
 import com.marketplace.marketplace_backend.dto.SellerLoginResponseDTO;
 import com.marketplace.marketplace_backend.dto.SellerSignupRequestDTO;
 import com.marketplace.marketplace_backend.dto.SellerSignupResponseDTO;
-import com.marketplace.marketplace_backend.service.SellerService;
+import com.marketplace.marketplace_backend.service.SellerAuthService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,27 +13,25 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/sellers")
+@RequestMapping("/api/seller/auth")
 @RequiredArgsConstructor
-public class SellerController {
+public class SellerAuthController {
 
-    private final SellerService sellerService;
+    private final SellerAuthService sellerAuthService;
 
-
-    //Signup Seller
+    // Seller Signup
     @PostMapping("/signup")
     public ResponseEntity<SellerSignupResponseDTO> signup(
-            @RequestBody SellerSignupRequestDTO dto){
+            @RequestBody SellerSignupRequestDTO request) {
 
-        return new ResponseEntity<>(sellerService.signup(dto), HttpStatus.CREATED);
+        return ResponseEntity.ok(sellerAuthService.signup(request));
     }
 
-
-    //Login Seller
+    // Seller Login
     @PostMapping("/login")
     public ResponseEntity<SellerLoginResponseDTO> login(
-            @RequestBody SellerLoginRequestDTO dto){
+            @RequestBody SellerLoginRequestDTO request) {
 
-        return  ResponseEntity.ok(sellerService.login(dto));
+        return ResponseEntity.ok(sellerAuthService.login(request));
     }
 }

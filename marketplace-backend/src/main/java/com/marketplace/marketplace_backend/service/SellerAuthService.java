@@ -5,9 +5,9 @@ import com.marketplace.marketplace_backend.dto.SellerLoginResponseDTO;
 import com.marketplace.marketplace_backend.dto.SellerSignupRequestDTO;
 import com.marketplace.marketplace_backend.dto.SellerSignupResponseDTO;
 
-public interface SellerService {
+public interface SellerAuthService {
 
-    SellerSignupResponseDTO signup(SellerSignupRequestDTO dto);
+    SellerSignupResponseDTO signup(SellerSignupRequestDTO request);
 
-    SellerLoginResponseDTO login(SellerLoginRequestDTO dto);
+    SellerLoginResponseDTO login(SellerLoginRequestDTO request);
 }

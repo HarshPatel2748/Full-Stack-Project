@@ -10,6 +10,6 @@ import lombok.*;
 public class SellerLoginResponseDTO {
 
     private Long sellerId;
-    private String role;
-    private String message;
+    private String shopName;
+    private String status;
 }
