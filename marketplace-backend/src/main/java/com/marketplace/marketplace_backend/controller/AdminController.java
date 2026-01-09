@@ -1,5 +1,7 @@
 package com.marketplace.marketplace_backend.controller;
 
+import com.marketplace.marketplace_backend.dto.AdminLoginRequestDTO;
+import com.marketplace.marketplace_backend.dto.AdminLoginResponseDTO;
 import com.marketplace.marketplace_backend.entity.Seller;
 import com.marketplace.marketplace_backend.service.impl.AdminServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +16,14 @@ import java.util.List;
 public class AdminController {
 
     private final AdminServiceImpl adminService;
+
+    //Admin Login
+    @PostMapping("/login")
+    public ResponseEntity<AdminLoginResponseDTO> login(
+            @RequestBody AdminLoginRequestDTO dto){
+
+        return ResponseEntity.ok(adminService.login(dto));
+    }
 
     //List pending sellers
     @GetMapping("/sellers/pending")

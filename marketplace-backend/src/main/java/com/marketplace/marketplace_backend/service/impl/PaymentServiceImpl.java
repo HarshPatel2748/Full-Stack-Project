@@ -1,5 +1,6 @@
 package com.marketplace.marketplace_backend.service.impl;
 
+import com.marketplace.marketplace_backend.config.RazorpayConfig;
 import com.marketplace.marketplace_backend.dto.CreatePaymentDTO;
 import com.marketplace.marketplace_backend.dto.PaymentResponseDTO;
 import com.marketplace.marketplace_backend.dto.PaymentVerificationDTO;
@@ -11,19 +12,34 @@ import com.marketplace.marketplace_backend.repository.OrderRepository;
 import com.marketplace.marketplace_backend.repository.PaymentRepository;
 import com.marketplace.marketplace_backend.service.PaymentService;
 import com.razorpay.RazorpayClient;
+import com.razorpay.RazorpayException;
 import com.razorpay.Utils;
+import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import org.json.JSONObject;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class PaymentServiceImpl implements PaymentService {
 
-    private final RazorpayClient razorpayClient;
+    private RazorpayClient razorpayClient;
     private final PaymentRepository paymentRepository;
     private final OrderRepository orderRepository;
+
+    @Value("${razorpay.key}")
+    private String razorpayKeyId;
+
+    @Value("${razorpay.secret}")
+    private String razorpayKeySecret;
+
+
+    @PostConstruct
+    public void init() throws RazorpayException {
+        razorpayClient = new RazorpayClient(razorpayKeyId, razorpayKeySecret);
+    }
 
 
     @Override
@@ -71,7 +87,7 @@ public class PaymentServiceImpl implements PaymentService {
             boolean isValid = Utils.verifySignature(
                     payLoad,
                     dto.getRazorpaySignature(),
-                    razorpayClient.getSecret()
+                    razorpayKeySecret
             );
 
             if(!isValid){

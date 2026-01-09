@@ -1,6 +1,8 @@
 package com.marketplace.marketplace_backend.service.impl;
 
 
+import com.marketplace.marketplace_backend.dto.AdminLoginRequestDTO;
+import com.marketplace.marketplace_backend.dto.AdminLoginResponseDTO;
 import com.marketplace.marketplace_backend.entity.Admin;
 import com.marketplace.marketplace_backend.entity.Seller;
 import com.marketplace.marketplace_backend.entity.SellerStatus;
@@ -19,6 +21,25 @@ public class AdminServiceImpl implements AdminService {
     private final SellerRepository sellerRepository;
 
     private final AdminRepository adminRepository;
+
+
+    //Admin Login
+    @Override
+    public AdminLoginResponseDTO login(AdminLoginRequestDTO dto) {
+
+        Admin admin = adminRepository.findByEmail(dto.getEmail())
+                .orElseThrow(() -> new RuntimeException("Invalid email or password"));
+
+        if(!admin.getPassword().equals(dto.getPassword())){
+            throw new RuntimeException("Invalid email or password");
+        }
+
+        return AdminLoginResponseDTO.builder()
+                .adminId(admin.getId())
+                .role("ADMIN")
+                .message("Login successful")
+                .build();
+    }
 
     //Get all pending sellers
     public List<Seller> getPendingSellers(){

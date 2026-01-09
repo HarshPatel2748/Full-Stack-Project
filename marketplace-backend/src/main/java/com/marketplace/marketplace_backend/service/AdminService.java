@@ -1,10 +1,14 @@
 package com.marketplace.marketplace_backend.service;
 
+import com.marketplace.marketplace_backend.dto.AdminLoginRequestDTO;
+import com.marketplace.marketplace_backend.dto.AdminLoginResponseDTO;
 import com.marketplace.marketplace_backend.entity.Seller;
 
 import java.util.List;
 
 public interface AdminService {
+
+    AdminLoginResponseDTO login(AdminLoginRequestDTO dto);
 
     List<Seller> getPendingSellers();
 
