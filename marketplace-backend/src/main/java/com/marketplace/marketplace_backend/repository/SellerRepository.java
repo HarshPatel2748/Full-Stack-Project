@@ -12,4 +12,6 @@ public interface SellerRepository extends JpaRepository<Seller, Long> {
     Optional<Seller> findByEmail(String email);
 
     List<Seller> findByStatus(SellerStatus status);
+
+    boolean existsByEmail(String email);
 }
