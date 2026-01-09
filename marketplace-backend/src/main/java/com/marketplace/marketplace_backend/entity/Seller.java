@@ -29,6 +29,7 @@ public class Seller {
     private String email;
 
     @Column(nullable = false)
+    @JsonIgnore
     private String password;
 
     private String phone;
