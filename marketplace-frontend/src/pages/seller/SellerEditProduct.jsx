@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
-import Navbar from "../../components/Navbar";
+import SellerNavbar from "../../components/SellerNavbar";
 import Footer from "../../components/Footer";
 
 const SellerEditProduct = () => {
@@ -95,7 +95,7 @@ const SellerEditProduct = () => {
 
   return (
     <div className="min-h-screen bg-gray-900 text-white flex flex-col">
-      <Navbar />
+      <SellerNavbar />
       <main className="flex-1">
 
       <div className="max-w-xl mx-auto p-6">

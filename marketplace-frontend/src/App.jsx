@@ -12,6 +12,7 @@ import AdminDashboard from './pages/admin/AdminDashboard.jsx'
 import SellerDashboard from './pages/seller/SellerDashboard.jsx'
 import SellerProductForm from './pages/seller/SellerProductForm.jsx'
 import SellerEditProduct from './pages/seller/SellerEditProduct.jsx'
+import SellerProfile from './pages/seller/SellerProfile.jsx'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -34,6 +35,7 @@ function App() {
         <Route path="/seller/product/:productId" element={<SellerProductForm />} />
         <Route path="/seller/add-product" element={<SellerProductForm />} />
         <Route path="/seller/edit-product/:productId" element={<SellerEditProduct />} />
+        <Route path='/seller/profile' element={<SellerProfile />} />
 
       </Routes>
     </Router>

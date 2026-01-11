@@ -88,7 +88,7 @@ const SellerDashboard = () => {
           {products.map((product) => (
             <div
               key={product.id}
-              className="bg-gray-800 p-4 rounded-lg shadow-md w-full max-w-[260px]"
+              className="bg-gray-800 p-4 rounded-lg shadow-md w-full max-w-65"
             >
               <img
                 src={product.imageUrl || "https://via.placeholder.com/300"}
