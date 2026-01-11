@@ -8,6 +8,10 @@ import SellerSignup from './pages/auth/seller/SellerSignup.jsx'
 import AdminLogin from './pages/auth/admin/AdminLogin.jsx'
 import WelcomePage from './pages/WelcomePage.jsx'
 import Homepage from './pages/Homepage.jsx'
+import AdminDashboard from './pages/admin/AdminDashboard.jsx'
+import SellerDashboard from './pages/seller/SellerDashboard.jsx'
+import SellerProductForm from './pages/seller/SellerProductForm.jsx'
+import SellerEditProduct from './pages/seller/SellerEditProduct.jsx'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -24,6 +28,13 @@ function App() {
         <Route path='/login/admin' element={<AdminLogin />} />
 
         <Route path='/home' element={<Homepage />} />
+
+        <Route path='/admin/dashboard' element={<AdminDashboard />} />
+        <Route path='/seller/dashboard' element={<SellerDashboard />} />
+        <Route path="/seller/product/:productId" element={<SellerProductForm />} />
+        <Route path="/seller/add-product" element={<SellerProductForm />} />
+        <Route path="/seller/edit-product/:productId" element={<SellerEditProduct />} />
+
       </Routes>
     </Router>
   )

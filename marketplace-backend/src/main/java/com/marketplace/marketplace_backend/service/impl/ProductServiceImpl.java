@@ -97,7 +97,7 @@ public class ProductServiceImpl implements ProductService {
         Seller seller = sellerRepository.findById(sellerId)
                 .orElseThrow(() -> new RuntimeException("Seller not found"));
 
-        return productRepository.findBySeller(seller);
+        return productRepository.findBySellerId(sellerId);
     }
 
     @Override

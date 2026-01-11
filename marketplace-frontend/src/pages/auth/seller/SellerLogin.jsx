@@ -31,16 +31,14 @@ const SellerLogin = () => {
         formData
       );
 
-      // response matches SellerLoginResponseDTO
       const seller = res.data;
 
-      // store seller session (simple, no JWT yet)
-      localStorage.setItem("seller", JSON.stringify(seller));
+      // ✅ STORE INDIVIDUAL VALUES (IMPORTANT)
+      localStorage.setItem("sellerId", seller.sellerId);
+      localStorage.setItem("sellerShopName", seller.shopName);
+      localStorage.setItem("sellerStatus", seller.status);
 
-      /**
-       * OPTIONAL LOGIC:
-       * If seller is not approved yet, block dashboard access
-       */
+      // ❌ Block unapproved sellers
       if (seller.status !== "APPROVED") {
         setError("Your account is not approved yet.");
         return;
@@ -91,7 +89,7 @@ const SellerLogin = () => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition-colors font-semibold disabled:opacity-50"
+            className="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition font-semibold disabled:opacity-50"
           >
             {loading ? "Logging in..." : "Login"}
           </button>
