@@ -28,9 +28,18 @@ const UserLogin = () => {
         formData
       );
 
-      // Save user info (simple auth for now)
-      localStorage.setItem("user", JSON.stringify(res.data));
+      const user = res.data;
 
+      // ✅ STORE INDIVIDUAL VALUES FOR STATIC PROFILE
+      localStorage.setItem("userId", user.id);
+      localStorage.setItem("userFirstName", user.firstName);
+      localStorage.setItem("userLastName", user.lastName);
+      localStorage.setItem("userEmail", user.email);
+      localStorage.setItem("userPhone", user.phone || "");
+      localStorage.setItem("userAddress", user.address || "");
+      localStorage.setItem("userCreatedAt", user.createdAt);
+
+      // Navigate to home or dashboard
       navigate("/home");
     } catch (err) {
       setError(
