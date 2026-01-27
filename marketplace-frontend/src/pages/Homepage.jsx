@@ -20,9 +20,19 @@ const Homepage = () => {
       });
   }, []);
 
-  const handleAddToCart = (productId) => {
-    console.log("Add to cart clicked for product:", productId);
-    // cart API later
+  const handleAddToCart = (product) => {
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    
+    // check if product is already in cart
+    const existing = cart.find((item) => item.id === product.id);
+    if (existing) {
+      existing.quantity += 1;
+    } else {
+      cart.push({ ...product, quantity: 1 });
+    }
+
+    localStorage.setItem("cart", JSON.stringify(cart));
+    alert(`${product.name} added to cart!`);
   };
 
   return (
@@ -31,15 +41,12 @@ const Homepage = () => {
 
       <main className="grow px-6 py-8 max-w-7xl mx-auto w-full">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">
-            Discover Products
-          </h1>
+          <h1 className="text-3xl font-bold mb-2">Discover Products</h1>
           <p className="text-gray-400">
             Browse products from multiple sellers at one place
           </p>
         </div>
 
-        {/* Search bar (frontend only for now) */}
         <div className="mb-10">
           <input
             type="text"
@@ -48,7 +55,6 @@ const Homepage = () => {
           />
         </div>
 
-        {/* Products */}
         {loading ? (
           <p className="text-gray-400">Loading products...</p>
         ) : products.length === 0 ? (
@@ -59,7 +65,7 @@ const Homepage = () => {
               <ProductCard
                 key={product.id}
                 product={product}
-                onAddToCart={handleAddToCart}
+                onAddToCart={() => handleAddToCart(product)}
               />
             ))}
           </div>

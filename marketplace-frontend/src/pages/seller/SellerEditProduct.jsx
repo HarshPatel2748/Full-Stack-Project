@@ -8,8 +8,8 @@ const SellerEditProduct = () => {
   const { productId } = useParams();
   const navigate = useNavigate();
 
-  const seller = JSON.parse(localStorage.getItem("seller"));
-  const sellerId = seller?.sellerId;
+  // ✅ Correct sellerId source (NO JSON.parse)
+  const sellerId = Number(localStorage.getItem("sellerId"));
 
   const [formData, setFormData] = useState({
     name: "",
@@ -20,10 +20,17 @@ const SellerEditProduct = () => {
     categoryId: ""
   });
 
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
 
-  // 🔹 Fetch existing product
+  // 🔐 Redirect if seller not logged in
+  useEffect(() => {
+    if (!sellerId) {
+      navigate("/login/seller");
+    }
+  }, [sellerId, navigate]);
+
+  // 🔹 Fetch product by seller
   useEffect(() => {
     const fetchProduct = async () => {
       try {
@@ -31,7 +38,9 @@ const SellerEditProduct = () => {
           `http://localhost:8080/api/products/seller/${sellerId}`
         );
 
-        const product = res.data.find(p => p.id === Number(productId));
+        const product = res.data.find(
+          (p) => p.id === Number(productId)
+        );
 
         if (!product) {
           setError("Product not found");
@@ -47,12 +56,17 @@ const SellerEditProduct = () => {
           categoryId: product.category?.id || ""
         });
       } catch (err) {
+        console.error(err);
         setError("Failed to load product");
+      } finally {
+        setLoading(false);
       }
     };
 
-    fetchProduct();
-  }, [productId, sellerId]);
+    if (sellerId && productId) {
+      fetchProduct();
+    }
+  }, [sellerId, productId]);
 
   const handleChange = (e) => {
     setFormData({
@@ -61,11 +75,10 @@ const SellerEditProduct = () => {
     });
   };
 
-  // 🔹 THIS IS THE MOST IMPORTANT PART
+  // 🔹 UPDATE PRODUCT (backend-aligned)
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-    setLoading(true);
 
     try {
       const payload = {
@@ -74,10 +87,10 @@ const SellerEditProduct = () => {
         price: Number(formData.price),
         stock: Number(formData.stock),
         imageUrl: formData.imageUrl,
-        categoryId: formData.categoryId
-          ? Number(formData.categoryId)
-          : null
+        categoryId: Number(formData.categoryId) // ✅ REQUIRED
       };
+
+      console.log("Updating product:", payload);
 
       await axios.put(
         `http://localhost:8080/api/products/seller/${sellerId}/${productId}`,
@@ -86,88 +99,89 @@ const SellerEditProduct = () => {
 
       navigate("/seller/dashboard");
     } catch (err) {
-      console.error(err.response);
-      setError("Failed to update product");
-    } finally {
-      setLoading(false);
+      console.error(err.response?.data);
+      setError(err.response?.data?.message || "Failed to update product");
     }
   };
 
   return (
     <div className="min-h-screen bg-gray-900 text-white flex flex-col">
       <SellerNavbar />
+
       <main className="flex-1">
+        <div className="max-w-xl mx-auto p-6">
+          <h2 className="text-2xl font-bold mb-4">Edit Product</h2>
 
-      <div className="max-w-xl mx-auto p-6">
-        <h2 className="text-2xl font-bold mb-4">Edit Product</h2>
+          {loading && <p className="text-gray-400">Loading...</p>}
+          {error && <p className="text-red-400 mb-4">{error}</p>}
 
-        {error && <p className="text-red-400 mb-3">{error}</p>}
+          {!loading && !error && (
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <input
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                placeholder="Product Name"
+                className="w-full px-4 py-2 bg-gray-700 rounded"
+                required
+              />
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <input
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            placeholder="Product Name"
-            className="w-full px-4 py-2 bg-gray-700 rounded"
-            required
-          />
+              <textarea
+                name="description"
+                value={formData.description}
+                onChange={handleChange}
+                placeholder="Description"
+                className="w-full px-4 py-2 bg-gray-700 rounded"
+                required
+              />
 
-          <textarea
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            placeholder="Description"
-            className="w-full px-4 py-2 bg-gray-700 rounded"
-            required
-          />
+              <input
+                type="number"
+                name="price"
+                value={formData.price}
+                onChange={handleChange}
+                placeholder="Price"
+                className="w-full px-4 py-2 bg-gray-700 rounded"
+                required
+              />
 
-          <input
-            name="price"
-            type="number"
-            value={formData.price}
-            onChange={handleChange}
-            placeholder="Price"
-            className="w-full px-4 py-2 bg-gray-700 rounded"
-            required
-          />
+              <input
+                type="number"
+                name="stock"
+                value={formData.stock}
+                onChange={handleChange}
+                placeholder="Stock"
+                className="w-full px-4 py-2 bg-gray-700 rounded"
+                required
+              />
 
-          <input
-            name="stock"
-            type="number"
-            value={formData.stock}
-            onChange={handleChange}
-            placeholder="Stock"
-            className="w-full px-4 py-2 bg-gray-700 rounded"
-            required
-          />
+              <input
+                name="imageUrl"
+                value={formData.imageUrl}
+                onChange={handleChange}
+                placeholder="Image URL"
+                className="w-full px-4 py-2 bg-gray-700 rounded"
+              />
 
-          <input
-            name="imageUrl"
-            value={formData.imageUrl}
-            onChange={handleChange}
-            placeholder="Image URL"
-            className="w-full px-4 py-2 bg-gray-700 rounded"
-          />
+              <input
+                type="number"
+                name="categoryId"
+                value={formData.categoryId}
+                onChange={handleChange}
+                placeholder="Category ID"
+                className="w-full px-4 py-2 bg-gray-700 rounded"
+                required
+              />
 
-          <input
-            name="categoryId"
-            type="number"
-            value={formData.categoryId}
-            onChange={handleChange}
-            placeholder="Category ID"
-            className="w-full px-4 py-2 bg-gray-700 rounded"
-          />
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="bg-indigo-600 px-6 py-2 rounded hover:bg-indigo-700"
-          >
-            {loading ? "Updating..." : "Update Product"}
-          </button>
-        </form>
-      </div>
+              <button
+                type="submit"
+                className="bg-indigo-600 px-6 py-2 rounded hover:bg-indigo-700"
+              >
+                Update Product
+              </button>
+            </form>
+          )}
+        </div>
       </main>
 
       <Footer />

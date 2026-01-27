@@ -40,7 +40,7 @@ public class Order {
     protected void onCreate(){
         this.createdAt = LocalDateTime.now();
         if (this.orderStatus == null){
-            this.orderStatus = OrderStatus.PLACED;
+            this.orderStatus = OrderStatus.CREATED;
         }
     }
 }

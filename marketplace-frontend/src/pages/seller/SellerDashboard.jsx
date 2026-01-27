@@ -11,56 +11,46 @@ const SellerDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // ✅ Get seller from localStorage
-  const seller = JSON.parse(localStorage.getItem("seller"));
-  const sellerId = seller?.sellerId;
+  // ✅ Get sellerId from localStorage
+  const sellerId = localStorage.getItem("sellerId");
 
   useEffect(() => {
     if (!sellerId) {
-      navigate("/login/seller");
+      navigate("/seller/login");
       return;
     }
 
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        const res = await axios.get(
+          `http://localhost:8080/api/products/seller/${sellerId}`
+        );
+        setProducts(Array.isArray(res.data) ? res.data : []);
+      } catch (err) {
+        console.error(err);
+        setError("Failed to fetch products");
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchProducts();
-  }, [sellerId]);
+  }, [sellerId, navigate]);
 
-  const fetchProducts = async () => {
-    try {
-      setLoading(true);
-      const res = await axios.get(
-        `http://localhost:8080/api/products/seller/${sellerId}`
-      );
-      setProducts(Array.isArray(res.data) ? res.data : []);
-    } catch (err) {
-      console.error(err);
-      setError("Failed to fetch products");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // 🗑 DELETE PRODUCT
   const handleDelete = async (productId) => {
-    const confirm = window.confirm(
-      "Are you sure you want to delete this product?"
-    );
-    if (!confirm) return;
+    if (!window.confirm("Are you sure you want to delete this product?")) return;
 
     try {
       await axios.delete(
         `http://localhost:8080/api/products/seller/${sellerId}/${productId}`
       );
-
-      // remove from UI instantly
-      setProducts((prev) =>
-        prev.filter((product) => product.id !== productId)
-      );
+      setProducts((prev) => prev.filter((p) => p.id !== productId));
     } catch (err) {
       alert("Failed to delete product");
     }
   };
 
-  // ✏ UPDATE PRODUCT
   const handleUpdate = (productId) => {
     navigate(`/seller/edit-product/${productId}`);
   };
@@ -69,7 +59,6 @@ const SellerDashboard = () => {
     <div className="min-h-screen bg-gray-900 text-white flex flex-col">
       <SellerNavbar />
       <main className="flex-1">
-
         <div className="flex justify-between items-center p-6">
           <h2 className="text-2xl font-bold">My Products</h2>
           <button
@@ -88,33 +77,27 @@ const SellerDashboard = () => {
           {products.map((product) => (
             <div
               key={product.id}
-              className="bg-gray-800 p-4 rounded-lg shadow-md w-full max-w-65"
+              className="bg-gray-800 p-4 rounded-lg shadow-md w-full max-w-xs"
             >
               <img
                 src={product.imageUrl || "https://via.placeholder.com/300"}
                 alt={product.name}
-                className="w-full h-40 object-cover rounded-md mb-3"
+                className="w-full h-48 object-cover rounded-md mb-3"
               />
-
               <h3 className="text-lg font-semibold">{product.name}</h3>
               <p className="text-gray-300 text-sm">{product.description}</p>
-
               <div className="mt-2 flex justify-between text-sm">
                 <span className="font-bold">₹{product.price}</span>
-                <span className="text-gray-400">
-                  Stock: {product.stock}
-                </span>
+                <span className="text-gray-400">Stock: {product.stock}</span>
               </div>
 
-              {/* ACTION BUTTONS */}
               <div className="flex gap-2 mt-4">
-                <button
+                {/* <button
                   onClick={() => handleUpdate(product.id)}
                   className="flex-1 bg-yellow-500 text-black py-1 rounded hover:bg-yellow-600"
                 >
                   Edit
-                </button>
-
+                </button> */}
                 <button
                   onClick={() => handleDelete(product.id)}
                   className="flex-1 bg-red-600 py-1 rounded hover:bg-red-700"
@@ -126,7 +109,6 @@ const SellerDashboard = () => {
           ))}
         </div>
       </main>
-
       <Footer />
     </div>
   );

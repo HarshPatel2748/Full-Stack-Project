@@ -34,7 +34,7 @@ public class OrderServiceImpl implements OrderService {
         //create order
         Order order = Order.builder()
                 .user(user)
-                .orderStatus(OrderStatus.valueOf("PENDING"))
+                .orderStatus(OrderStatus.valueOf("CREATED"))
                 .totalAmount(0.0)
                 .build();
         order = orderRepository.save(order);

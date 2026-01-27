@@ -14,6 +14,8 @@ import SellerProductForm from './pages/seller/SellerProductForm.jsx'
 import SellerEditProduct from './pages/seller/SellerEditProduct.jsx'
 import SellerProfile from './pages/seller/SellerProfile.jsx'
 import UserProfile from './pages/user/UserProfile.jsx'
+import CartPage from './pages/CartPage.jsx'
+import CheckoutPage from './pages/CheckoutPage.jsx'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -30,6 +32,8 @@ function App() {
         <Route path='/login/admin' element={<AdminLogin />} />
 
         <Route path='/home' element={<Homepage />} />
+        <Route path='/cart' element={<CartPage />} />
+        <Route path='/checkout' element={<CheckoutPage />} />
 
         <Route path='/admin/dashboard' element={<AdminDashboard />} />
         <Route path='/seller/dashboard' element={<SellerDashboard />} />

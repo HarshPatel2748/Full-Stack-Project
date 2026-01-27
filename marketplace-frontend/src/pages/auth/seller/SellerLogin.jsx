@@ -21,7 +21,7 @@ const SellerLogin = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // prevent page refresh
     setError("");
     setLoading(true);
 
@@ -31,21 +31,25 @@ const SellerLogin = () => {
         formData
       );
 
+      // Backend returns SellerLoginResponseDTO
       const seller = res.data;
 
-      // ✅ STORE INDIVIDUAL VALUES (IMPORTANT)
+      // Store seller info in localStorage
       localStorage.setItem("sellerId", seller.sellerId);
       localStorage.setItem("sellerShopName", seller.shopName);
       localStorage.setItem("sellerStatus", seller.status);
 
-      // ❌ Block unapproved sellers
+      // Check approval status
       if (seller.status !== "APPROVED") {
         setError("Your account is not approved yet.");
+        setLoading(false);
         return;
       }
 
+      // Navigate to dashboard
       navigate("/seller/dashboard");
     } catch (err) {
+      console.error(err);
       setError(err.response?.data?.message || "Invalid email or password");
     } finally {
       setLoading(false);
